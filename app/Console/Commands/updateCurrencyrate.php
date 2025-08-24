@@ -33,8 +33,9 @@ class updateCurrencyRate extends Command
         $response = $client->get('https://www.cbr-xml-daily.ru/daily_json.js');
         $body = json_decode($response->getBody()->getContents());
         $currencies = $body->Valute;
+        $countryMap = config('currencies');
 
-        DB::transaction(function () use ($currencies) {
+        DB::transaction(function () use ($currencies, $countryMap) {
             foreach (Currency::all() as $oldCurrency) {
                 CurrenciesHistory::create([
                     'name' => $oldCurrency->name,
@@ -48,6 +49,7 @@ class updateCurrencyRate extends Command
                 Currency::create([
                     'name' => $newCurrency->Name,
                     'char_code' => $newCurrency->CharCode,
+                    'country_code' => $countryMap[$newCurrency->CharCode],
                     'nominal' => $newCurrency->Nominal,
                     'value' => $newCurrency->Value
                 ]);

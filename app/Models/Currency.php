@@ -9,6 +9,7 @@ class Currency extends Model
     public $fillable = [
         'name',
         'char_code',
+        'country_code',
         'nominal',
         'value'
     ];

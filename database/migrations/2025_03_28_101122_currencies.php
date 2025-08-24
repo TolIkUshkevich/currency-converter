@@ -16,6 +16,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('name');
             $table->string('char_code');
+            $table->string('country_code');
             $table->integer('nominal');
             $table->float('value');
         });
