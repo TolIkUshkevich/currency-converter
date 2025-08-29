@@ -9,3 +9,272 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+:root {
+    --primary-color: #2a5bd7;
+    --border-color: #d1d5db;
+    --hover-bg: #f3f4f6;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    background-color: #f8f9fa;
+}
+
+header {
+    margin: 40px auto;
+    padding: 0 20px;
+    background-color: #2a5bd7;
+}
+
+.converter {
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    width: 100%;
+    max-width: 900px; /* Увеличенная ширина */
+}
+
+.converter-header {
+    background: var(--primary-color);
+    color: white;
+    padding: 20px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    padding: 25px; /* Увеличенный отступ */
+    border-bottom: 1px solid var(--border-color);
+}
+
+.input-group:last-child {
+    border-bottom: none;
+}
+
+.currency-input {
+    flex: 1;
+    padding: 15px; /* Увеличенный отступ */
+    font-size: 1.1rem; /* Увеличенный размер шрифта */
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    text-align: right;
+    font-weight: 500;
+    transition: border-color 0.2s;
+    height: 54px; /* Фиксированная высота */
+    box-sizing: border-box;
+}
+
+.currency-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(42, 91, 215, 0.2);
+}
+
+.currency-select-container {
+    position: relative;
+    min-width: 250px; /* Увеличена ширина */
+    margin-left: 20px; /* Увеличен отступ */
+}
+
+.swap-container {
+    display: flex;
+    justify-content: center;
+    padding: 15px 0; /* Увеличен отступ */
+    background: #f9fafb;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.swap-btn {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    width: 50px; /* Увеличен размер */
+    height: 50px; /* Увеличен размер */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: var(--shadow);
+}
+
+.swap-btn:hover {
+    background: var(--hover-bg);
+    transform: rotate(180deg);
+}
+
+.swap-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
+.frequent-currencies {
+    padding: 20px; /* Увеличен отступ */
+    background: #f9fafb;
+}
+
+.frequent-title {
+    font-size: 16px; /* Увеличен размер */
+    color: #666;
+    margin-bottom: 15px; /* Увеличен отступ */
+    font-weight: 500;
+}
+
+.frequent-list {
+    display: flex;
+    gap: 8px; /* Увеличен отступ */
+    flex-wrap: wrap;
+}
+
+.frequent-currency {
+    display: flex;
+    align-items: center;
+    padding: 8px 15px; /* Увеличен отступ */
+    background: white;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    border: 1px solid var(--border-color);
+    transition: all 0.2s;
+}
+
+.frequent-currency:hover {
+    background: var(--hover-bg);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.frequent-flag {
+    width: 24px; /* Увеличен размер */
+    height: 18px; /* Увеличен размер */
+    margin-right: 8px; /* Увеличен отступ */
+    border-radius: 2px;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.converter-footer {
+    padding: 20px; /* Увеличен отступ */
+    background: white;
+    border-top: 1px solid var(--border-color);
+    font-size: 15px; /* Увеличен размер */
+    color: #666;
+    text-align: center;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+/* Стили для кастомного dropdown */
+.custom-select {
+    position: relative;
+    width: 100%;
+    font-family: Arial, sans-serif;
+}
+
+.select-selected {
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 15px; /* Увеличен отступ */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s;
+    height: 54px; /* Фиксированная высота */
+    box-sizing: border-box;
+}
+
+.select-selected:hover {
+    background-color: var(--hover-bg);
+    border-color: #ccc;
+}
+
+.select-selected.select-arrow-active {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-color: #aaa;
+}
+
+.select-selected:after {
+    content: "";
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid #666;
+    transition: transform 0.3s;
+    margin-left: 12px; /* Увеличен отступ */
+}
+
+.select-selected.select-arrow-active:after {
+    transform: rotate(180deg);
+}
+
+/* Выпадающий список выходит за пределы формы */
+.select-items {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    z-index: 1000;
+    max-height: 350px;
+    overflow-y: auto;
+    box-shadow: var(--shadow);
+    display: none;
+}
+
+.select-items.select-open {
+    display: block;
+}
+
+.select-item {
+    display: flex;
+    align-items: center;
+    padding: 15px; /* Увеличен отступ */
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.select-item:hover {
+    background: var(--hover-bg);
+}
+
+.select-item.selected {
+    background-color: #e6f0ff;
+    font-weight: 600;
+}
+
+.currency-flag {
+    margin-right: 15px; /* Увеличен отступ */
+    border-radius: 3px;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.currency-code {
+    font-weight: 600;
+    font-size: 17px; /* Увеличен размер */
+    flex-grow: 1;
+}
+
+/* Скрытие оригинального select */
+.original-select {
+    display: none;
+}

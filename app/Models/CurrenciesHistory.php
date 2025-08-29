@@ -21,6 +21,6 @@ class CurrenciesHistory extends Model
 
     public function prunable(): Builder
     {
-        return static::where('created_at', '<=', now()->subMonth());
+        return static::where('created_at', '<=', now()->subYear());
     }
 }

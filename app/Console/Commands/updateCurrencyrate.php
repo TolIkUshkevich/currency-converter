@@ -54,6 +54,13 @@ class updateCurrencyRate extends Command
                     'value' => $newCurrency->Value
                 ]);
             }
+            Currency::create([
+                'name' => 'Рубль',
+                'char_code' => 'RUB',
+                'country_code' => $countryMap['RUB'],
+                'nominal' => 1,
+                'value' => 1
+            ]);
 
             
         });

@@ -38,6 +38,7 @@ return [
     'PLN' => 'pl',
     'SAR' => 'sa',
     'RON' => 'ro',
+    'RUB' => 'ru',
     'XDR' => 'un',
     'SGD' => 'sg',
     'TJS' => 'tj',

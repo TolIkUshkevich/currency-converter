@@ -9,6 +9,8 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
+Schedule::command('app:update-currency-rate')->daily();
+
 Schedule::command('model:prune', [
-    '--model' => [CurrenciesHistory::class],
+    '--model' => [\App\Models\CurrenciesHistory::class]
 ])->daily();
