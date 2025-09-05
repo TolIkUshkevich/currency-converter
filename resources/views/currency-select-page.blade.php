@@ -19,32 +19,31 @@
             График курса валют
         </button>
 </header>
-    <div class="converter">
-        
-        <!-- Скрытые оригинальные select элементы -->
-        <select name="from_currency" id="from_currency" class="original-select">
-            @foreach($currencies as $currency)
-            <option value="{{ $currency['char_code'] }}" {{ $currency['char_code'] == 'USD' ? 'selected' : '' }}>
-                {{ $currency['char_code'] }}
-            </option>
-            @endforeach
-        </select>
-        
-        <select name="to_currency" id="to_currency" class="original-select">
-            @foreach($currencies as $currency)
+<form action="{{ route('make.graphic') }}" method="POST">
+    @csrf
+    <select name="numirator" id="numerator" class="original-select">
+        @foreach($currencies as $currency)
+        <option value="{{ $currency['char_code'] }}" {{ $currency['char_code'] == 'USD' ? 'selected' : '' }}>
+            {{ $currency['char_code'] }}
+        </option>
+        @endforeach
+    </select>
+            
+    <select name="denumirator" id="denumerator" class="original-select">
+        @foreach($currencies as $currency)
             <option value="{{ $currency['char_code'] }}" {{ $currency['char_code'] == 'EUR' ? 'selected' : '' }}>
                 {{ $currency['char_code'] }}
             </option>
-            @endforeach
-        </select>
-        
-        <div class="input-group">
-            <input type="text" class="currency-input" id="amount1" value="1" autocomplete="off" placeholder="0.00">
-            <div class="currency-select-container">
+        @endforeach
+</select>
+
+        <div class="input-group-select">
+            <div class="currency-select-container-for-graphics">    
+                <!-- Кастомный dropdown для первой валюты -->
                 <div class="custom-select" id="currency1-select">
                     <div class="select-selected">
                         <div class="currency-flag" id="currency1-flag" style="background-image: url('/flags/usd.svg')"></div>
-                        <div class="currency-code" id="currency1-code">USD</div>
+                        <div class="currency-code-select" id="currency1-code">USD</div>
                     </div>
                     <div class="select-items" id="currency1-dropdown">
                         @foreach($currencies as $currency)
@@ -60,23 +59,16 @@
                 </div>
             </div>
         </div>
-        
-        <div class="swap-container">
-            <div class="swap-btn" id="swapBtn">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path d="M7 16V4m0 0L3 8m4-4l4 4m6 4v12m0 0l4-4m-4 4l-4-4"></path>
-                </svg>
-            </div>
-        </div>
-        
-        <div class="input-group">
-            <input type="text" class="currency-input" id="amount2" autocomplete="off" placeholder="0.00">
-            <div class="currency-select-container">
+
+        <h2 class="between-select-text">to</h2>
+
+        <div class="input-group-select">
+            <div class="currency-select-container-for-graphics">
                 <!-- Кастомный dropdown для второй валюты -->
                 <div class="custom-select" id="currency2-select">
                     <div class="select-selected">
                         <div class="currency-flag" id="currency2-flag" style="background-image: url('/flags/eur.svg')"></div>
-                        <div class="currency-code" id="currency2-code">EUR</div>
+                        <div class="currency-code-select" id="currency2-code">EUR</div>
                     </div>
                     <div class="select-items" id="currency2-dropdown">
                         @foreach($currencies as $currency)
@@ -92,25 +84,7 @@
                 </div>
             </div>
         </div>
-        
-        @if(!empty($frequentCurrencies))
-        <div class="frequent-currencies">
-            <div class="frequent-title">Часто используемые валюты:</div>
-            <div class="frequent-list" id="frequentCurrencies">
-                @foreach($frequentCurrencies as $currency)
-                <div class="frequent-currency" data-currency="{{ $currency['char_code'] }}">
-                <span class="currency-flag fi fi-{{ config('currencies')[$currency['char_code']] }}"></span>
-                    {{ $currency['char_code'] }}
-                </div>
-                @endforeach
-            </div>
-        </div>
-        @endif
-        
-        <div class="converter-footer">
-            <div id="rate-info">Обновление курсов в реальном времени</div>
-        </div>
-    </div>
-    <script>import "flag-icons/css/flag-icons.min.css";</script>
+        <button type="submit">Show</button>
+        </form>
 </body>
 </html>

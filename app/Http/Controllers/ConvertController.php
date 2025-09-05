@@ -16,6 +16,11 @@ class ConvertController extends Controller
         return $fromCurr['value'] / $fromCurr['nominal'] / $toCurr['value'] / $toCurr['nominal'];
     }
 
+    public function show(Request $request)
+    {
+        return view('main', ['currencies' => Currency::all()]);
+    }
+
     public function convert(Request $request)
     {
         $request->validate([
