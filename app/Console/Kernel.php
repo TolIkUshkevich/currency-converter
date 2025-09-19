@@ -13,4 +13,9 @@ class Kernel extends ConsoleKernel
 
         require base_path('routes/console.php');
     }
+
+    protected function schedule(Schedule $schedule)
+    {
+        $schedule->command('app:update-currency-rate')->everyMinute();
+    }
 }
