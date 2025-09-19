@@ -1,35 +1,23 @@
-FROM php:8.2-fpm
+FROM php:8.2-cli
 
 RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    curl \
-    libzip-dev \
-    libonig-dev \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    libxml2-dev \
-    nodejs \
-    npm \
-    zip \
-    && docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl gd
+    libpq-dev \
+    libzip-dev
+RUN docker-php-ext-install pdo pdo_pgsql zip
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-WORKDIR /var/www/html
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+    && php -r "unlink('composer-setup.php');"
 
-COPY composer.json composer.lock ./
-RUN composer install --optimize-autoloader --no-dev
+RUN curl -sL https://deb.nodesource.com/setup_20.x | bash -
+RUN apt-get install -y nodejs
+
+WORKDIR /app
 
 COPY . .
-
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
-
-RUN npm install
+RUN composer install
+RUN npm ci
 RUN npm run build
 
-EXPOSE 9000
-
-CMD ["php-fpm"]
+CMD ["bash", "-c", "php artisan key:generate && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT"]
