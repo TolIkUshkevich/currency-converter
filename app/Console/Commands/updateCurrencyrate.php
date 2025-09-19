@@ -3,10 +3,11 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use GuzzleHttp\Client;
-use Illuminate\Support\Facades\DB;
 use App\Models\Currency;
 use App\Models\CurrenciesHistory;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use GuzzleHttp\Client;
 
 class updateCurrencyRate extends Command
 {
@@ -29,31 +30,35 @@ class updateCurrencyRate extends Command
      */
     public function handle()
     {
-        $client = new Client();
-        $response = $client->get('https://www.cbr-xml-daily.ru/daily_json.js');
-        $body = json_decode($response->getBody()->getContents());
-        $currencies = $body->Valute;
+        $date = Carbon::now()->format("d/m/Y");
+        $client = new Client([
+            'base_uri' => "https://www.cbr.ru/scripts/XML_daily.asp?date_req=".$date
+        ]);
+        $response = $client->request("GET");
+        $body = $response->getBody();
+        $xmlData = simplexml_load_string((string) $body);
+        $data = json_decode(json_encode($xmlData), true)["Valute"];
+
+        $currencies = [];
+        foreach ($data as $valute) {
+            $currencies[] = [
+                'name' => $valute['Name'],
+                'nominal' => (int) $valute['Nominal'],
+                'char_code' => $valute['CharCode'],
+                'value' => (float) str_replace(',', '.', $valute['Value']),
+                'date' => Carbon::createFromFormat('d/m/Y', $date)
+            ];
+        }
         $countryMap = config('currencies');
 
         DB::transaction(function () use ($currencies, $countryMap) {
-            foreach (Currency::all() as $oldCurrency) {
-                CurrenciesHistory::create([
-                    'name' => $oldCurrency->name,
-                    'char_code' => $oldCurrency->char_code,
-                    'nominal' => $oldCurrency->nominal,
-                    'value' => $oldCurrency->value
-                ]);
-            }
             Currency::truncate();
             foreach ($currencies as $newCurrency) {
-                Currency::create([
-                    'name' => $newCurrency->Name,
-                    'char_code' => $newCurrency->CharCode,
-                    'country_code' => $countryMap[$newCurrency->CharCode],
-                    'nominal' => $newCurrency->Nominal,
-                    'value' => $newCurrency->Value
-                ]);
+                Currency::create([...$newCurrency, 'country_code' => $countryMap[$newCurrency['char_code']]]);
+
+                CurrenciesHistory::create($newCurrency);
             }
+
             Currency::create([
                 'name' => 'Рубль',
                 'char_code' => 'RUB',
@@ -61,8 +66,6 @@ class updateCurrencyRate extends Command
                 'nominal' => 1,
                 'value' => 1
             ]);
-
-            
         });
     }
 }

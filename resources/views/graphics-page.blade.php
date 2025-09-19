@@ -12,39 +12,22 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <header>
-        <h1><span class="header-text">Конвертер валют</span></h1>
-        <button class="main-page-link" data-route="{{ route('main.page') }}">
-            Главная
+        <button class="main-page-link header-text" data-route="{{ route('main.page') }}">
+        Конвертер валют
         </button>
         <button class="course-graphics-link" data-route="{{ route('select.page') }}">
             График курса валют
         </button>
     </header>
-
+    <div>{{ $numerator }} to {{ $denumerator }} graphic</div>
     <div id="chart" class="chart"></div>
-
-    
-
+    <div class="period-buttons">
+        <button id="week-btn" class="active-period">Неделя</button>
+        <button id="month-btn">Месяц</button>
+        <button id="year-btn">Год</button>
+    </div>
     <script>
-        // Ждем загрузки DOM
-        document.addEventListener('DOMContentLoaded', function() {
-            var options = {
-                chart: {
-                    type: 'line',
-                    height: 400 // добавляем высоту
-                },
-                series: [{
-                    name: 'sales',
-                    data: @json(array_values($currencyPairValues))
-                }],
-                xaxis: {
-                    categories: @json(array_keys($currencyPairValues))
-                }
-            };
-
-            var chart = new ApexCharts(document.querySelector("#chart"), options);
-            chart.render();
-        });
+          window.currencyData = @json($currencyPairValues);
     </script>
 </body>
 </html>

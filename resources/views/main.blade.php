@@ -11,18 +11,17 @@
 <body>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <header>
-        <h1><span class="header-text">Конвертер валют</span></h1>
-        <button class="main-page-link" data-route="{{ route('main.page') }}">
-            Главная
+        <button class="main-page-link header-text" data-route="{{ route('main.page') }}">
+        Конвертер валют
         </button>
         <button class="course-graphics-link" data-route="{{ route('select.page') }}">
             График курса валют
         </button>
-</header>
+    </header>
     <div class="converter">
         
         <!-- Скрытые оригинальные select элементы -->
-        <select name="from_currency" id="from_currency" class="original-select">
+        <select name="from_currency" id="from_currency" class="original-select" style="display: none;">
             @foreach($currencies as $currency)
             <option value="{{ $currency['char_code'] }}" {{ $currency['char_code'] == 'USD' ? 'selected' : '' }}>
                 {{ $currency['char_code'] }}
@@ -30,7 +29,7 @@
             @endforeach
         </select>
         
-        <select name="to_currency" id="to_currency" class="original-select">
+        <select name="to_currency" id="to_currency" class="original-select" style="display: none;">
             @foreach($currencies as $currency)
             <option value="{{ $currency['char_code'] }}" {{ $currency['char_code'] == 'EUR' ? 'selected' : '' }}>
                 {{ $currency['char_code'] }}
@@ -43,14 +42,13 @@
             <div class="currency-select-container">
                 <div class="custom-select" id="currency1-select">
                     <div class="select-selected">
-                        <div class="currency-flag" id="currency1-flag" style="background-image: url('/flags/usd.svg')"></div>
+                        <span class="currency-flag fi fi-{{ config('currencies')['USD'] }}"></span>
                         <div class="currency-code" id="currency1-code">USD</div>
                     </div>
                     <div class="select-items" id="currency1-dropdown">
                         @foreach($currencies as $currency)
                         <div class="select-item" 
-                             data-currency="{{ $currency['char_code'] }}"
-                             data-flag="{{ $currency['char_code'] }}.svg">
+                             data-currency="{{ $currency['char_code'] }}">
                             <span class="currency-flag fi fi-{{ config('currencies')[$currency['char_code']] }}"></span>
                             <div class="currency-code">{{ $currency['char_code'] }}</div>
                             <div style="margin-left: 12px; color: #777; font-size: 15px;">{{ $currency['name'] }}</div>
@@ -75,14 +73,13 @@
                 <!-- Кастомный dropdown для второй валюты -->
                 <div class="custom-select" id="currency2-select">
                     <div class="select-selected">
-                        <div class="currency-flag" id="currency2-flag" style="background-image: url('/flags/eur.svg')"></div>
+                        <span class="currency-flag fi fi-{{ config('currencies')['EUR'] }}"></span>
                         <div class="currency-code" id="currency2-code">EUR</div>
                     </div>
                     <div class="select-items" id="currency2-dropdown">
                         @foreach($currencies as $currency)
                         <div class="select-item" 
-                             data-currency="{{ $currency['char_code'] }}"
-                             data-flag="{{ $currency['char_code'] }}.svg">
+                             data-currency="{{ $currency['char_code'] }}">
                             <span class="currency-flag fi fi-{{ config('currencies')[$currency['char_code']] }}"></span>
                             <div class="currency-code">{{ $currency['char_code'] }}</div>
                             <div style="margin-left: 12px; color: #777; font-size: 15px;">{{ $currency['name'] }}</div>
@@ -111,6 +108,5 @@
             <div id="rate-info">Обновление курсов в реальном времени</div>
         </div>
     </div>
-    <script>import "flag-icons/css/flag-icons.min.css";</script>
 </body>
 </html>

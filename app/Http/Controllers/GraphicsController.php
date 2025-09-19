@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Currency;
 use App\Models\CurrenciesHistory;
 use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\SelectCurrencyRequest;
 
 class GraphicsController extends Controller
 {
@@ -17,22 +18,32 @@ class GraphicsController extends Controller
 
     public function show(Request $request)
     {
-        $numinator = session('numinator') ?? CurrenciesHistory::where('char_code', 'USD')->get();;
-        $denuminator = session('denuminator') ?? CurrenciesHistory::where('char_code', 'EUR')->get();;
-        $minHistoryLen = count($numinator);
+        $numeratorCharCode = session('numerator') ?? 'USD';
+        $denumeratorCharCode = session('denumerator') ?? 'EUR';
+        $numerator = CurrenciesHistory::where('char_code', $numeratorCharCode)->orderBy('date', 'ASC')->get();
+        $denumerator = CurrenciesHistory::where('char_code', $denumeratorCharCode)->orderBy('date', 'ASC')->get();
+        $minVal = count($numerator) < count($denumerator) ? count($numerator) : count($denumerator);
         $currencyPairValues = [];
-        for ($i = 0; $i < $minHistoryLen; $i++) {
-            $currencyPairValues[$numinator[$i]->created_at_formatted] = round($numinator[$i]->value/$denuminator[$i]->value, 5);
+        for ($i = 0; $i < $minVal; $i++) {
+            $currencyPairValues[] = [
+                $numerator[$i]->created_at_formatted,
+                round($numerator[$i]->value/$denumerator[$i]->value, 5)
+            ];
         }
-        return view('graphics-page', ['currencyPairValues' => $currencyPairValues]);
+
+        return view('graphics-page', [
+            'currencyPairValues' => $currencyPairValues,
+            'numerator' => $numeratorCharCode,
+            'denumerator' => $denumeratorCharCode
+        ]);
     }
 
-    public function makeGraphic(Request $request): RedirectResponse
+    public function makeGraphic(SelectCurrencyRequest $request): RedirectResponse
     {
-        $numirator = CurrenciesHistory::where('char_code', $request->numirator)->get();
-        $denumirator = CurrenciesHistory::where('char_code', $request->denumirator)->get();
-        return redirect()->route('show.graphic')
-            ->with('numinator', $numirator)
-            ->with('denuminator', $denumirator);
+        $validated = $request->validated();
+        $numerator = $validated['numerator'];
+        $denumerator = $validated['denumerator'];
+        return redirect(route('show.graphic'))
+            ->with(['numerator' => $validated['numerator'], 'denumerator' => $validated['denumerator']]);
     }
 }

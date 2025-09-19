@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Currency;
+use App\Http\Requests\ConvertRequest;
 
 class ConvertController extends Controller
 {
@@ -11,7 +12,6 @@ class ConvertController extends Controller
     {
         $fromCurr = Currency::where('char_code', $fromCharCode)->first();
         $toCurr = Currency::where('char_code', $toCharCode)->first();
-        // dd($fromCurr);
         
         return $fromCurr['value'] / $fromCurr['nominal'] / $toCurr['value'] / $toCurr['nominal'];
     }
@@ -21,25 +21,26 @@ class ConvertController extends Controller
         return view('main', ['currencies' => Currency::all()]);
     }
 
-    public function convert(Request $request)
-    {
-        $request->validate([
-            'fromCharCode' => 'required|string|size:3',
-            'toCharCode' => 'required|string|size:3',
-            'amount' => 'required|numeric|min:0'
-        ]);
+    public function convert(ConvertRequest $request)
+    {   
+        $validated = $request->validated();
         
-        // Обновляем статистику использования
-        // $this->updateCurrencyUsage($request->from, $request->to);
-        
-        // Получаем реальный курс из вашего сервиса
-        $rate = $this->getExchangeRate($request->fromCharCode, $request->toCharCode);
-        $result = $request->amount * $rate;
-        
-        return response()->json([
-            'success' => true,
-            'result' => number_format($result, 4),
-            'rate' => number_format($rate, 6)
-        ]);
+        try {
+            $rate = $this->getExchangeRate($validated['fromCharCode'], $validated['toCharCode']);
+            $result = $validated['amount'] * $rate;
+            \Log::info([$rate, $result]);
+            
+            return response()->json([
+                'success' => true,
+                'result' => number_format($result, 4),
+                'rate' => number_format($rate, 6)
+            ]);
+        } catch (\Exception $e) {
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Conversion failed'
+            ], 500);
+        }
     }
 }

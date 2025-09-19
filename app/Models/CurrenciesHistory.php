@@ -13,22 +13,29 @@ class CurrenciesHistory extends Model
 
     public $table = 'currencies_history';
 
+    public $timestamps = false;
+
     public $fillable = [
         'name',
         'char_code',
         'nominal',
-        'value'
+        'value',
+        'date'
+    ];
+
+    protected $casts = [
+        'date' => 'date'
     ];
 
     public function prunable(): Builder
     {
-        return static::where('created_at', '<=', now()->subYear());
+        return static::where('date', '<=', now()->subYear());
     }
 
     protected function createdAtFormatted(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->created_at->format('d.m.Y')
+            get: fn () => $this->date->format('d/m/Y')
         );
     }
 }

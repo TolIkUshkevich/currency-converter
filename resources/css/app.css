@@ -34,6 +34,7 @@ header {
     padding-left: 2%;
     background-color: #000f96;
     align-items: baseline;
+    margin-bottom: 20px;
 }
 
 .header-text {
@@ -347,4 +348,14 @@ header {
     height: 400px;
     display: flex;
     /* justify-content: right; */
+}
+
+/* Скрываем флаги в выбранном состоянии селектора */
+.select-selected .currency-flag {
+    display: none !important;
+}
+
+/* Оставляем флаги в выпадающем списке */
+.select-items .currency-flag {
+    display: inline-block;
 }
